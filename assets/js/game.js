@@ -3,6 +3,7 @@ function Game() {
   this.round = 0;
   this.roundNumber = 0;
   this.gameOver = false;
+  this.playerWins = false;
   this.deck = new Deck(this);
 
   this.deck.setup();

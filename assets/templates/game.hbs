@@ -1,13 +1,22 @@
 {{#each players as |player|}}
     {{#if player.computerPlayer}}
-    <div class="computer">
+        <h2>Opponent Dinner</h2>
     {{else}}
-    <div class="player">
-    {{/if}}
-        {{#each player.cards as |card|}}
-        <div class="card {{slug card.type}}" data-index="{{@index}}">
-            {{card.name}}
+        <h2>Hand</h2>
+        <div class="player-hand">
+            {{#each player.cards as |card|}}
+                <div class="card {{slug card.type}}" data-index="{{@index}}">
+                    {{card.name}}
+                </div>
+            {{/each}}
         </div>
+        <h2>My Dinner</h2>
+    {{/if}}
+    <div class="dinner">
+        {{#each player.dinner as |card|}}
+            <div class="card {{slug card.type}}" data-index="{{@index}}">
+                {{card.name}}
+            </div>
         {{/each}}
     </div>
 {{/each}}
