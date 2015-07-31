@@ -1,6 +1,7 @@
 function Game() {
   this.players = [];
-  this.turnNumber = 0;
+  this.round = 0;
+  this.roundNumber = 0;
   this.gameOver = false;
   this.deck = new Deck(this);
 
@@ -8,17 +9,27 @@ function Game() {
   this.players.push(new Player(), new Player(true));
 
   this.on('start:round', function() {
-    this.turnNumber++;
-    console.info('Starting turn', this.turnNumber);
+    // Checks if 3 rounds have been played
+    if (this.roundNumber < 3) {
+      this.roundNumber++;
+      console.info('Starting round', this.roundNumber);
 
-    this.dealRound();
+      this.dealRound();
+    } else {
+      this.gameOver = true;
+      this.trigger('change');
+    }
   });
 
   this.on('submit:card', function(index) {
     this.currentPlayer().chooseCard(index);
     _.invoke(this.aiPlayers(), 'chooseCard');
 
-    this.trigger('change');
+    if (this.currentPlayer().cards.length) {
+      this.trigger('change');
+    } else {
+      this.trigger('start:round');
+    }
   });
 }
 
