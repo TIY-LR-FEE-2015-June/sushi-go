@@ -13,6 +13,13 @@ function Game() {
 
     this.dealRound();
   });
+
+  this.on('submit:card', function(index) {
+    this.currentPlayer().chooseCard(index);
+    _.invoke(this.aiPlayers(), 'chooseCard');
+
+    this.trigger('change');
+  });
 }
 
 Game.prototype = _.extend({
@@ -34,6 +41,10 @@ Game.prototype = _.extend({
   },
 
   currentPlayer: function() {
-    return this.players.findWhere({computerPlayer: false});
+    return _.findWhere(this.players, {computerPlayer: false});
+  },
+
+  aiPlayers: function() {
+    return _.where(this.players, {computerPlayer: true});
   }
 }, Backbone.Events);
