@@ -14,7 +14,7 @@ var bowerStuff = concat('bower_components', {outputFile: 'vendor.js', inputFiles
 
 var templatesAndScripts = handlebars('assets', {
     srcDir: 'templates',
-    namesapce: 'AppTemplates'
+    namespace: 'AppTemplates'
 });
 
 var appJs = concat(templatesAndScripts, {outputFile: 'app.js', inputFiles: [
