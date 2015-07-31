@@ -9,6 +9,8 @@ function Game() {
   this.players.push(new Player(), new Player(true));
 
   this.on('start:round', function() {
+    _.invoke(this.players, 'scoreDinner');
+
     // Checks if 3 rounds have been played
     if (this.roundNumber < 3) {
       this.roundNumber++;
