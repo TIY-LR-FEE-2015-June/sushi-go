@@ -1,4 +1,5 @@
-function Card(name, aiScore) {
-    this.name = name;
-    this.aiScore = aiScore;
+function Card(name, type, aiScore) {
+  this.name = name;
+  this.type = type;
+  this.aiScore = aiScore;
 }

@@ -1,0 +1,13 @@
+{{#each players as |player|}}
+    {{#if player.computerPlayer}}
+    <div class="computer">
+    {{else}}
+    <div class="player">
+    {{/if}}
+        {{#each player.cards as |card|}}
+        <div class="card {{slug card.type}}" data-index="{{@index}}">
+            {{card.name}}
+        </div>
+        {{/each}}
+    </div>
+{{/each}}

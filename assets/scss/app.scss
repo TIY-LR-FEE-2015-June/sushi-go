@@ -1,5 +1,50 @@
 @import 'reset';
 
 img {
-    max-width: 100px;
+  max-width: 100px;
+}
+
+#game-board {
+  max-width: 1140px;
+  margin: auto;
+}
+
+.player, .computer {
+  display: flex;
+  width: 100%;
+  height: 120px;
+  margin-top: 20px;
+}
+
+.card {
+    width: 100%;
+    border: 2px solid;
+
+    &.tempura {
+        background: #b27fb9;
+    }
+
+    &.sashimi {
+        background: #add51a;
+    }
+
+    &.dumpling {
+        background: #446bb8;
+    }
+
+    &.nigiri {
+        background: #f8b216;
+    }
+
+    &.maki-rolls {
+        background: #b80015;
+    }
+
+    &.wasabi {
+      background: #f8b216;
+    }
+
+    &.pudding {
+      background: #f29da2;
+    }
 }

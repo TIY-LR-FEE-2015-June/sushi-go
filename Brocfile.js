@@ -9,12 +9,13 @@ var handlebars = require('broccoli-handlebars-precompiler');
 var bowerStuff = concat('bower_components', {outputFile: 'vendor.js', inputFiles: [
     'jquery/dist/jquery.min.js',
     'handlebars/handlebars.min.js',
-    'underscore/underscore-min.js'
+    'underscore/underscore-min.js',
+    'backbone/backbone-min.js'
   ]});
 
 var templatesAndScripts = handlebars('assets', {
-    srcDir: 'templates',
-    namespace: 'AppTemplates'
+  srcDir: 'templates',
+  namespace: 'AppTemplates'
 });
 
 var appJs = concat(templatesAndScripts, {outputFile: 'app.js', inputFiles: [
@@ -22,6 +23,7 @@ var appJs = concat(templatesAndScripts, {outputFile: 'app.js', inputFiles: [
     'templates/**/*.js',
     'js/card.js',
     'js/deck.js',
+    'js/hand.js',
     'js/player.js',
     'js/game.js',
     'js/app.js'
