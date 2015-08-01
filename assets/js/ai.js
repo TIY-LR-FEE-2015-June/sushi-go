@@ -5,8 +5,9 @@ function AI() {
 AI.prototype = _.extend({
   constructor: AI,
   chooseCard: function() {
-    var randIndex = _.random(this.cards - 1);
+    var highest = _.max(this.cards, 'aiScore');
+    var index = this.cards.indexOf(highest);
 
-    Player.prototype.chooseCard.apply(this, randIndex);
+    Player.prototype.chooseCard.apply(this, index);
   }
 }, Player);

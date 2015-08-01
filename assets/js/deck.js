@@ -4,39 +4,42 @@
  */
 function Deck(game) {
   this.game = game;
+
+  // A Deck should store many Cards
   this.cards = [];
 }
 
+// A Deck should know it's initial card set
 Deck.prototype.setupInfo = [
   {
     number: 14,
     name: 'Tempura',
     type: 'tempura',
-    aiScore: 1
+    aiScore: 2 / 5
   },
   {
     number: 14,
     name: 'Sashimi',
     type: 'sashimi',
-    aiScore: 1
+    aiScore: 10 / 3
   },
   {
     number: 14,
     name: 'Dumpling',
     type: 'dumpling',
-    aiScore: 1
+    aiScore: 10 / 4
   },
   {
     number: 12,
     name: '2 Maki Rolls',
     type: 'maki-rolls',
-    aiScore: 1
+    aiScore: 2
   },
   {
     number: 8,
     name: '3 Maki Rolls',
     type: 'maki-rolls',
-    aiScore: 1
+    aiScore: 3
   },
   {
     number: 6,
@@ -48,13 +51,13 @@ Deck.prototype.setupInfo = [
     number: 10,
     name: 'Salmon Nigiri',
     type: 'nigiri',
-    aiScore: 1
+    aiScore: 2
   },
   {
     number: 5,
     name: 'Squid Nigiri',
     type: 'nigiri',
-    aiScore: 1
+    aiScore: 3
   },
   {
     number: 5,
@@ -76,6 +79,11 @@ Deck.prototype.setupInfo = [
   }
 ];
 
+/**
+ * A Deck should be able to initialize with standard Card set
+ *
+ * @return {null}
+ */
 Deck.prototype.setup = function() {
   // Take every card in setupInfo and add it to this.cards
   this.cards = _(this.setupInfo).reduce(function(cards, cardInfo) {
@@ -87,21 +95,38 @@ Deck.prototype.setup = function() {
   }, []);
 
   // Shuffle Deck
+  this.shuffle();
+};
+
+/**
+ * A Deck should be able to shuffle
+ *
+ * @return {null}
+ */
+Deck.prototype.shuffle = function() {
   this.cards = _(this.cards).shuffle();
 };
 
+/**
+ * A Deck should be able to draw Cards
+ *
+ * @param  {number} amount
+ * @return {Array}         Array of Card objects
+ */
 Deck.prototype.deal = function(amount) {
-  var hand = [];
+  var dealt = [];
 
   for (var i = 0; i < amount; i++) {
+    // Remove returned cards from the deck
     var drawnCard = this.cards.pop();
 
     if (drawnCard) {
-      hand.push(drawnCard);
+      dealt.push(drawnCard);
     } else if (this.game) {
       this.game.trigger('gameOver', 'Out of cards');
     }
   }
 
-  return hand;
+  // Returns a single card or number of cards requested
+  return dealt;
 };

@@ -2,7 +2,7 @@
     {{#if player.computerPlayer}}
         <h2>Opponent Dinner</h2>
     {{else}}
-        <h2>Hand</h2>
+        <h2>My Hand</h2>
         <div class="player-hand">
             {{#each player.cards as |card|}}
                 <div class="card {{slug card.type}}" data-index="{{@index}}">

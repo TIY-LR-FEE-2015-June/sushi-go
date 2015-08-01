@@ -1,7 +1,14 @@
+/**
+ * Creates a new Player object
+ * @param {boolean} computerPlayer
+ */
 function Player(computerPlayer) {
+  // A Player should have a dinner set of Cards
   this.dinner = [];
   this.score = 0;
 
+  // Extend Hand and now players have `this.cards`
+  // A Player should have a Hand of Cards
   Hand.apply(this);
   this.computerPlayer = computerPlayer || false;
 }

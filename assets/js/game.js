@@ -1,14 +1,22 @@
 function Game() {
   this.players = [];
+
+  // A Game should keep track of the Turn Number
   this.round = 0;
   this.roundNumber = 0;
   this.gameOver = false;
   this.playerWins = false;
+
+  // A Game should keep track of the Deck in Play
   this.deck = new Deck(this);
 
+  // Setup our Deck
   this.deck.setup();
+
+  // A Game should keep track of the Players
   this.players.push(new Player(), new Player(true));
 
+  // A Game should be able to start a Round
   this.on('start:round', function() {
     _.invoke(this.players, 'scoreDinner');
 
@@ -25,12 +33,16 @@ function Game() {
   });
 
   this.on('submit:card', function(index) {
+    // Game should send chosen card to Player
     this.currentPlayer().chooseCard(index);
+
+    // Game should trigger AI to choose a Card
     _.invoke(this.aiPlayers(), 'chooseCard');
 
+    // If a player still has cards in their hand, keep playing
     if (this.currentPlayer().cards.length) {
       this.trigger('change');
-    } else {
+    } else { /* Else start a new round */
       this.trigger('start:round');
     }
   });
@@ -39,6 +51,7 @@ function Game() {
 Game.prototype = _.extend({
   constructor: Game,
 
+  // The number of Cards in each starting Hand
   cardsPerPlayer: [
     {players: 2, cards: 10}
   ],
