@@ -1,56 +1,59 @@
-function Game() {
-  this.players = [];
+var Game = Backbone.Model.extend({
+  defaults: {
+    players: [],
+    round: 0,
+    roundNumber: 0,
+    gameOver: false,
+    playerWins: false,
+    deck: null,
 
-  // A Game should keep track of the Turn Number
-  this.round = 0;
-  this.roundNumber = 0;
-  this.gameOver = false;
-  this.playerWins = false;
+  },
 
-  // A Game should keep track of the Deck in Play
-  this.deck = new Deck(this);
+  initialize: function () {
+    // A Game should keep track of the Deck in Play
+    this.set('deck', new Deck(this));
 
-  // Setup our Deck
-  this.deck.setup();
+    // Setup our Deck
+    this.get('deck').setup();
 
-  // A Game should keep track of the Players
-  this.players.push(new Player(), new Player(true));
+    // A Game should keep track of the Players
+    this.get('players').push(new Player(), new Player({computerPlayer: true}));
 
-  // A Game should be able to start a Round
-  this.on('start:round', function() {
-    _.invoke(this.players, 'scoreDinner');
+    // A Game should be able to start a Round
+    this.on('start:round', function() {
+      _.invoke(this.get('players'), 'scoreDinner');
 
-    // Checks if 3 rounds have been played
-    if (this.roundNumber < 3) {
-      this.roundNumber++;
-      console.info('Starting round', this.roundNumber);
+      var roundNumber = this.get('roundNumber');
 
-      this.dealRound();
-    } else {
-      this.gameOver = true;
-      this.trigger('change');
-    }
-  });
+      // Checks if 3 rounds have been played
+      if (roundNumber < 3) {
+        roundNumber++;
+        this.set('roundNumber', roundNumber);
+        console.info('Starting round', roundNumber);
 
-  this.on('submit:card', function(index) {
-    // Game should send chosen card to Player
-    this.currentPlayer().chooseCard(index);
+        this.dealRound();
+      } else {
+        this.gameOver = true;
+        this.trigger('change');
+      }
+    });
 
-    // Game should trigger AI to choose a Card
-    _.invoke(this.aiPlayers(), 'chooseCard');
-    this.swapHands();
+    this.on('submit:card', function(index) {
+      // Game should send chosen card to Player
+      this.currentPlayer().chooseCard(index);
 
-    // If a player still has cards in their hand, keep playing
-    if (this.currentPlayer().cards.length) {
-      this.trigger('change');
-    } else { /* Else start a new round */
-      this.trigger('start:round');
-    }
-  });
-}
+      // Game should trigger AI to choose a Card
+      _.invoke(this.aiPlayers(), 'chooseCard');
+      this.swapHands();
 
-Game.prototype = _.extend({
-  constructor: Game,
+      // If a player still has cards in their hand, keep playing
+      if (this.currentPlayer().cards.length) {
+        this.trigger('change');
+      } else { /* Else start a new round */
+        this.trigger('start:round');
+      }
+    });
+  },
 
   // The number of Cards in each starting Hand
   cardsPerPlayer: [
@@ -58,10 +61,11 @@ Game.prototype = _.extend({
   ],
 
   dealRound: function() {
-    var cardsToDeal = _.findWhere(this.cardsPerPlayer, {players: this.players.length}).cards;
-    var deck = this.deck;
+    var players = this.get('players');
+    var cardsToDeal = _.findWhere(this.cardsPerPlayer, {players: players.length}).cards;
+    var deck = this.get('deck');
 
-    this.players.forEach(function(player) {
+    players.forEach(function(player) {
       player.addCards(deck.deal(cardsToDeal));
     });
 
@@ -69,7 +73,7 @@ Game.prototype = _.extend({
   },
 
   swapHands: function() {
-    _.reduce(this.players, function(prevHand, currentPlayer) {
+    _.reduce(this.get('players'), function(prevHand, currentPlayer) {
       var handToPass = currentPlayer.cards;
       currentPlayer.cards = prevHand;
 
@@ -78,14 +82,23 @@ Game.prototype = _.extend({
   },
 
   lastPlayer: function() {
-    return this.players[this.players.length - 1];
+    return this.get('players')[this.get('players').length - 1];
   },
 
   currentPlayer: function() {
-    return _.findWhere(this.players, {computerPlayer: false});
+    return _.findWhere(this.get('players'), {computerPlayer: false});
   },
 
   aiPlayers: function() {
-    return _.where(this.players, {computerPlayer: true});
+    return _.where(this.get('players'), {computerPlayer: true});
+  },
+
+  toJSON: function() {
+    var og = Backbone.Model.prototype.toJSON.apply(this);
+
+    og.players = _.invoke(og.players, 'toJSON');
+    og.deck = og.deck.toJSON();
+
+    return og;
   }
-}, Backbone.Events);
+});

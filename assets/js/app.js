@@ -5,7 +5,7 @@ $('#game-board').html(AppTemplates.start());
 $('#game-board').on('click', '.choose-character', function() {
   // A Game should be started with a number of players
   var numberOfPlayers = parseInt($(this).html());
-  var game = new Game(numberOfPlayers);
+  game = new Game(numberOfPlayers);
 
   // A User should be able to choose a card for this hand
   $('#game-board').on('click', '.player-hand .card', function() {
@@ -17,9 +17,9 @@ $('#game-board').on('click', '.choose-character', function() {
   // A User should see the updated game whenever Dinners or Hands `change`
   game.on('change', function() {
     if (game.gameOver) {
-      $('#game-board').html(AppTemplates['game-over'](game));
+      $('#game-board').html(AppTemplates['game-over'](game.toJSON()));
     } else {
-      $('#game-board').html(AppTemplates.game(game));
+      $('#game-board').html(AppTemplates.game(game.toJSON()));
     }
   });
 

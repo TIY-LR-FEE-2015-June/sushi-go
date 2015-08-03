@@ -1,17 +1,17 @@
-function Hand() {
-  // A Hand should store many Cards
-  this.cards = [];
-}
-
-Hand.prototype = {
-  constructor: Hand,
-
+var Hand = Backbone.Collection.extend({
   // A Hand should be able to add cards
   addCards: function(cards) {
-    this.cards = this.cards.concat(cards);
+    this.add(cards);
   },
 
   resetCards: function() {
-    this.cards = [];
+    this.reset([]);
+  },
+
+  chooseCard: function(index) {
+    var card = this.at(index);
+    this.remove(card);
+
+    return card;
   }
-};
+});

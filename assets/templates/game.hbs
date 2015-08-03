@@ -4,7 +4,7 @@
     {{else}}
         <h2>My Hand</h2>
         <div class="player-hand">
-            {{#each player.cards as |card|}}
+            {{#each player.hand as |card|}}
                 <div class="card {{slug card.type}}" data-index="{{@index}}">
                     {{card.name}}
                 </div>

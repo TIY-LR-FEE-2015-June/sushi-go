@@ -2,30 +2,42 @@
  * Creates a new Player object
  * @param {boolean} computerPlayer
  */
-function Player(computerPlayer) {
-  // A Player should have a dinner set of Cards
-  this.dinner = [];
-  this.score = 0;
+var Player = Backbone.Model.extend({
+  defaults: {
+    score: 0,
+    hand: null,
+    dinner: null,
+    computerPlayer: false
+  },
 
-  // Extend Hand and now players have `this.cards`
-  // A Player should have a Hand of Cards
-  Hand.apply(this);
-  this.computerPlayer = computerPlayer || false;
-}
+  initialize: function() {
+    this.set('hand', new Hand());
+    this.set('dinner', []);
+  },
 
-Player.prototype = _.extend({
-  constructor: Player,
+  addCards: function(cards) {
+    this.get('hand').addCards(cards);
+  },
 
   chooseCard: function(index) {
-    var card = this.cards.splice(index, 1);
+    var card = this.get('hand').chooseCard(index);
 
-    this.dinner = this.dinner.concat(card);
+    this.set('dinner', this.get('dinner').concat(card));
   },
 
   scoreDinner: function() {
-    this.score += this.dinner.length;
-    console.info('Score: ', this.score);
+    var score = this.get('score');
+    this.set('score', score + this.get('dinner').length);
+    console.info('Score: ', this.get('score'));
 
-    this.dinner = [];
+    this.set('dinner', []);
+  },
+
+  toJSON: function() {
+    var og = Backbone.Model.prototype.toJSON.apply(this);
+
+    og.hand = og.hand.toJSON();
+
+    return og;
   }
-}, Hand.prototype);
+});
