@@ -38,6 +38,7 @@ function Game() {
 
     // Game should trigger AI to choose a Card
     _.invoke(this.aiPlayers(), 'chooseCard');
+    this.swapHands();
 
     // If a player still has cards in their hand, keep playing
     if (this.currentPlayer().cards.length) {
@@ -65,6 +66,19 @@ Game.prototype = _.extend({
     });
 
     this.trigger('change');
+  },
+
+  swapHands: function() {
+    _.reduce(this.players, function(prevHand, currentPlayer) {
+      var handToPass = currentPlayer.cards;
+      currentPlayer.cards = prevHand;
+
+      return handToPass;
+    }, this.lastPlayer().cards);
+  },
+
+  lastPlayer: function() {
+    return this.players[this.players.length - 1];
   },
 
   currentPlayer: function() {
